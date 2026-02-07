@@ -71,39 +71,49 @@ alter table public.membership_plans enable row level security;
 alter table public.memberships enable row level security;
 alter table public.attendance enable row level security;
 
-create policy if not exists "Profiles are viewable by owner"
+drop policy if exists "Profiles are viewable by owner" on public.profiles;
+drop policy if exists "Profiles are updatable by owner" on public.profiles;
+drop policy if exists "Profiles are insertable by owner" on public.profiles;
+drop policy if exists "Membership plans readable by members" on public.membership_plans;
+drop policy if exists "Memberships readable by owner" on public.memberships;
+drop policy if exists "Memberships insertable by owner" on public.memberships;
+drop policy if exists "Memberships updatable by owner" on public.memberships;
+drop policy if exists "Attendance readable by admins" on public.attendance;
+drop policy if exists "Attendance modifiable by admins" on public.attendance;
+
+create policy "Profiles are viewable by owner"
   on public.profiles for select
   using (auth.uid() = id or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Profiles are updatable by owner"
+create policy "Profiles are updatable by owner"
   on public.profiles for update
   using (auth.uid() = id or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Profiles are insertable by owner"
+create policy "Profiles are insertable by owner"
   on public.profiles for insert
   with check (auth.uid() = id or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Membership plans readable by members"
+create policy "Membership plans readable by members"
   on public.membership_plans for select
   using (auth.role() = 'authenticated');
 
-create policy if not exists "Memberships readable by owner"
+create policy "Memberships readable by owner"
   on public.memberships for select
   using (auth.uid() = user_id or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Memberships insertable by owner"
+create policy "Memberships insertable by owner"
   on public.memberships for insert
   with check (auth.uid() = user_id);
 
-create policy if not exists "Memberships updatable by owner"
+create policy "Memberships updatable by owner"
   on public.memberships for update
   using (auth.uid() = user_id or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Attendance readable by admins"
+create policy "Attendance readable by admins"
   on public.attendance for select
   using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
-create policy if not exists "Attendance modifiable by admins"
+create policy "Attendance modifiable by admins"
   on public.attendance for all
   using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
