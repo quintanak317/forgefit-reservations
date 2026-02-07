@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ForgeFit Reservations</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">FF</div>
+          <div>
+            <h1>ForgeFit</h1>
+            <p>CrossFit Class Reservations</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn" data-view="schedule">Schedule</button>
+          <button class="nav-btn" data-view="profile">Profile</button>
+          <button class="nav-btn" data-view="admin" id="adminNav">Admin</button>
+        </nav>
+      </header>
+
+      <main class="content">
+        <section class="panel" id="authPanel">
+          <h2>Welcome</h2>
+          <p>Reserve your favorite classes, manage your spot, and get notified automatically.</p>
+          <div class="auth-grid">
+            <div class="card">
+              <h3>Log In</h3>
+              <label>Email</label>
+              <input id="loginEmail" type="email" placeholder="you@email.com" />
+              <label>Password</label>
+              <input id="loginPassword" type="password" placeholder="Password" />
+              <button id="loginBtn">Log In</button>
+              <div class="hint" id="loginHint"></div>
+            </div>
+            <div class="card">
+              <h3>Create Account</h3>
+              <label>Name</label>
+              <input id="signupName" type="text" placeholder="Your name" />
+              <label>Email</label>
+              <input id="signupEmail" type="email" placeholder="you@email.com" />
+              <label>Password</label>
+              <input id="signupPassword" type="password" placeholder="Create a password" />
+              <label>Admin Code (optional)</label>
+              <input id="adminCode" type="text" placeholder="COACH" />
+              <button id="signupBtn">Create Account</button>
+              <div class="hint" id="signupHint"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="scheduleView">
+          <div class="panel-header">
+            <div>
+              <h2>Class Schedule</h2>
+              <p class="muted">Tap a class to reserve or join the waitlist.</p>
+            </div>
+            <div class="filters">
+              <input id="dateFilter" type="date" />
+              <button id="resetDate">Today</button>
+            </div>
+          </div>
+          <div id="scheduleList" class="schedule-grid"></div>
+        </section>
+
+        <section class="panel hidden" id="profileView">
+          <div class="panel-header">
+            <div>
+              <h2>Your Profile</h2>
+              <p class="muted">Track upcoming classes and notifications.</p>
+            </div>
+            <button id="logoutBtn" class="ghost">Log out</button>
+          </div>
+          <div class="profile-grid">
+            <div class="card">
+              <h3>Member Details</h3>
+              <div class="kv" id="profileDetails"></div>
+              <label>Phone (for SMS)</label>
+              <input id="profilePhone" type="tel" placeholder="+1 555 123 4567" />
+              <button id="saveProfileBtn" class="ghost">Save Contact</button>
+            </div>
+            <div class="card">
+              <h3>Membership</h3>
+              <div id="membershipDetails" class="kv"></div>
+              <div id="planOptions" class="plan-grid"></div>
+            </div>
+            <div class="card">
+              <h3>Upcoming Reservations</h3>
+              <div id="reservationList"></div>
+            </div>
+            <div class="card">
+              <h3>Notifications</h3>
+              <div id="notificationList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="adminView">
+          <div class="panel-header">
+            <div>
+              <h2>Admin Console</h2>
+              <p class="muted">Create and manage classes. Waitlists auto-promote.</p>
+            </div>
+          </div>
+          <div class="admin-grid">
+            <div class="card">
+              <h3>Create Class</h3>
+              <label>Title</label>
+              <input id="classTitle" type="text" placeholder="AMRAP Burn" />
+              <label>Coach</label>
+              <input id="classCoach" type="text" placeholder="Coach Jamie" />
+              <label>Date</label>
+              <input id="classDate" type="date" />
+              <label>Start Time</label>
+              <input id="classTime" type="time" />
+              <label>Duration (mins)</label>
+              <input id="classDuration" type="number" min="30" max="120" value="60" />
+              <label>Capacity</label>
+              <input id="classCapacity" type="number" min="4" max="40" value="16" />
+              <button id="createClassBtn">Create</button>
+              <div class="hint" id="adminHint"></div>
+            </div>
+            <div class="card">
+              <h3>Manage Classes</h3>
+              <div id="adminClassList"></div>
+            </div>
+            <div class="card">
+              <h3>Class Roster + Check-ins</h3>
+              <label>Select Class</label>
+              <select id="rosterSelect"></select>
+              <div id="rosterList" class="list"></div>
+            </div>
+            <div class="card">
+              <h3>Admin Analytics</h3>
+              <div class="filters">
+                <input id="analyticsStart" type="date" />
+                <input id="analyticsEnd" type="date" />
+                <button id="refreshAnalytics" class="ghost">Refresh</button>
+              </div>
+              <div id="analyticsSummary" class="kv"></div>
+              <div id="analyticsBreakdown" class="list"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
